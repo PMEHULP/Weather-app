@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #8d8f8f, #646565);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 300px;
+      box-shadow: 5px 5px 5px #38c1e0;
+    }
+    input {
+      padding: 10px;
+      width: 80%;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    #weatherResult {
+      margin-top: 20px;
+    }
+    img {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Weather App</h2>
+    <input type="text" id="cityInput" placeholder="Enter city name" />
+    <button onclick="getWeather()">Get Weather</button>
+    <div id="weatherResult"></div>
+  </div>
+
+  <script>
+    function getWeather() {
+      const city = document.getElementById("cityInput").value.trim();
+      const apiKey = "727652bcaa774b18936163223250310";
+      const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`;
+
+      if (!city) {
+        document.getElementById("weatherResult").innerHTML = "<p>Please enter a city name.</p>";
+        return;
+      }
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.error) {
+            document.getElementById("weatherResult").innerHTML = `<p>${data.error.message}</p>`;
+          } else {
+            const html = `<marquee><p><strong>Temperature:</strong> ${data.current.temp_c}°C</p> </marquee>
+              <h3>${data.location.name}, ${data.location.region} , ${data.location.country}</h3>
+                            <p><strong>Condition:</strong> ${data.current.condition.text}</p>
+              <img src="${data.current.condition.icon}" alt="Weather icon" />
+              <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
+              <p><strong>Wind:</strong> ${data.current.wind_kph} kph</p>
+            `;
+            document.getElementById("weatherResult").innerHTML = html;
+          }
+        })
+        .catch(error => {
+          document.getElementById("weatherResult").innerHTML = "<p>Error fetching data. Please try again.</p>";
+          console.error("Fetch error:", error);
+        });
+    }
+  </script>
+</body>
+</html>
