@@ -6,90 +6,136 @@
   <title>Weather App</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #8d8f8f, #646565);
+      font-family: "Poppins", sans-serif;
+      background-size: cover;
+      background-position: center;
+      height: 100vh;
+      margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      transition: background 1s ease-in-out;
+      background-color: rgb(207, 241, 230);
     }
+
     .container {
-      background-color: #fff;
+      background: rgba(164, 171, 169, 0.993);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
       text-align: center;
-      width: 300px;
-      box-shadow: 5px 5px 5px #38c1e0;
+      width: 320px;
+      box-shadow: 0 8px 25px rgba(10, 10, 10, 0.3);
+      color: #fff;
     }
+
+    h2 {
+      font-size: 26px;
+      margin-bottom: 15px;
+    }
+
     input {
       padding: 10px;
-      width: 80%;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      width: 75%;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 16px;
+      text-align: center;
     }
+
     button {
       padding: 10px 20px;
-      background-color: #007BFF;
+      background: #00bcd4;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
+      font-weight: bold;
       cursor: pointer;
+      margin-top: 10px;
+      transition: 0.3s;
     }
+
     button:hover {
-      background-color: #0056b3;
+      background: #0097a7;
     }
+
     #weatherResult {
       margin-top: 20px;
     }
-    img {
-      margin-top: 10px;
+
+    .weather-icon {
+      width: 80px;
+      margin: 10px 0;
     }
+
+    marquee {
+      color: #ffe400;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    
   </style>
 </head>
+
 <body>
   <div class="container">
-    <h2>Weather App</h2>
+    <h2>🌦️ Weather App</h2>
     <input type="text" id="cityInput" placeholder="Enter city name" />
     <button onclick="getWeather()">Get Weather</button>
     <div id="weatherResult"></div>
   </div>
 
   <script>
+    const apiKey = "727652bcaa774b18936163223250310";
+
+    // 🎨 Predefined random background images
+    const backgroundImages = [
+      "https://picsum.photos/id/1015/1200/800",
+      "https://picsum.photos/id/1025/1200/800",
+      "https://picsum.photos/id/1035/1200/800",
+      "https://picsum.photos/id/1045/1200/800",
+      "https://picsum.photos/id/1055/1200/800"
+    ];
+
     function getWeather() {
       const city = document.getElementById("cityInput").value.trim();
-      const apiKey = "727652bcaa774b18936163223250310";
-      const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`;
+      const result = document.getElementById("weatherResult");
 
       if (!city) {
-        document.getElementById("weatherResult").innerHTML = "<p>Please enter a city name.</p>";
+        result.innerHTML = "<p>Please enter a city name.</p>";
         return;
       }
 
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          if (data.error) {
-            document.getElementById("weatherResult").innerHTML = `<p>${data.error.message}</p>`;
-          } else {
-            const html = `<marquee><p><strong>Temperature:</strong> ${data.current.temp_c}°C</p> </marquee>
-              <h3>${data.location.name}, ${data.location.region} , ${data.location.country}</h3>
-                            <p><strong>Condition:</strong> ${data.current.condition.text}</p>
-             
-              <p><strong>Humidity:</strong> ${data.current.humidity}%</p>
-              <p><strong>Wind:</strong> ${data.current.wind_kph} kph</p>
-            `;
-            document.getElementById("weatherResult").innerHTML = html;
+      const weatherUrl = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}&aqi=yes`;
+
+      fetch(weatherUrl)
+        .then(weatherRes => weatherRes.json())
+        .then(weatherData => {
+          if (weatherData.error) {
+            result.innerHTML = `<p>${weatherData.error.message}</p>`;
+            return;
           }
+
+          // 🌄 Set random background image
+          const randomImage = backgroundImages[Math.floor(Math.random() * backgroundImages.length)];
+          document.body.style.backgroundImage = `url(${randomImage})`;
+
+          // 🌤️ Display weather details
+          result.innerHTML = `
+            <marquee><p><strong>Temperature:</strong> ${weatherData.current.temp_c}°C</p></marquee>
+            <h3>${weatherData.location.name}, ${weatherData.location.region}, ${weatherData.location.country}</h3>
+            <img src="https:${weatherData.current.condition.icon}" alt="Weather Icon" class="weather-icon">
+            <p><strong>Condition:</strong> ${weatherData.current.condition.text}</p>
+            <p><strong>Humidity:</strong> ${weatherData.current.humidity}%</p>
+            <p><strong>Wind:</strong> ${weatherData.current.wind_kph} kph</p>
+          `;
         })
-        .catch(error => {
-          document.getElementById("weatherResult").innerHTML = "<p>Error fetching data. Please try again.</p>";
-          console.error("Fetch error:", error);
+        .catch(() => {
+          result.innerHTML = "<p>Error fetching weather data. Please try again later.</p>";
         });
     }
   </script>
 </body>
 </html>
-
