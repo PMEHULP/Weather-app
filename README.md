@@ -1,2 +1,24 @@
 # Weather-app
-A clean and easy-to-use web app that lets users check the current weather in any city. Just enter a city name and instantly see temperature, conditions, humidity, and wind speed — powered by WeatherAPI.
+A simple and stylish weather application built with HTML, CSS, and JavaScript. Users can enter a city name to get real-time weather information including temperature, condition, humidity, and wind speed. The app also displays a random background image for visual appeal.
+
+## 🚀 Features
+
+- 🔍 Search weather by city name
+- 🌡️ Displays temperature, humidity, wind speed, and condition
+- 🎨 Random background image from a preset collection
+- 📱 Responsive design for desktop and mobile
+
+## 🛠️ Technologies Used
+
+- HTML5
+- CSS3
+- JavaScript (ES6)
+- [WeatherAPI](https://www.weatherapi.com/) for weather data
+- [Picsum Photos](https://picsum.photos/) for random background images
+
+## 📦 Setup Instructions
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/weather-app.git
+   cd weather-app
